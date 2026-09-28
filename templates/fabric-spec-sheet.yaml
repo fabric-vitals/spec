@@ -1,0 +1,103 @@
+# Fabric Vitals — Fabric Spec Sheet (template, v0.2 draft)
+#
+# Fill this in BEFORE measurement. Field IDs (S1–S23) match SPEC_SHEET.md §2.
+# Every field is declared by the fabric's owner. Leave nothing blank: use
+# "not-applicable" only where SPEC_SHEET.md allows it.
+# This template contains no values. Any value you enter is your fabric's promise.
+
+S22_version:
+  spec_sheet_version: ""          # e.g. your own version string
+  date: ""                        # YYYY-MM-DD
+  signer: ""                      # person or role accountable for the declaration
+  rulebook_version: "RB-0.2"      # the Rulebook this sheet is declared against
+
+# ---------------------------------------------------------------- Identity
+S1_fabric_scope:
+  scope_id: ""
+  inventory_ref: ""               # switches, links and NIC ports in scope
+  job_bearing_capacity_ref: ""    # which capacity carries accelerator jobs
+
+S23_scoring_scope:                # the unit within which jobs run (pod or scalable unit); one score per scope
+  - scope_id: ""
+    inventory_ref: ""             # the part of S1 inside this scope
+
+S2_purpose:
+  purpose: ""                     # training | inference | mixed
+  scoring_profile: ""             # TRAINING | INFERENCE | GENERAL (a mixed fabric names one)
+
+# ---------------------------------------------------------------- Build
+S3_topology:
+  shape: ""                       # clos | rail-optimized | rail-only | multi-plane
+  tiers: ""
+  designed_paths_ref: ""          # designed endpoint-pair paths
+
+S4_host_attachment: ""            # single-homed | dual-homed | multi-plane (K_planes)
+
+S5_uplinks_and_subscription:
+  subscription_ratio: ""          # leaf uplink / downlink capacity
+  disjoint_paths_per_tier: ""
+
+S6_planes:
+  count: ""
+  nic_port_to_plane_ref: ""
+
+S7_transport_and_load_distribution:
+  transport: ""                   # e.g. RoCEv2 | UET | InfiniBand
+  congestion_control_mode: ""     # e.g. DCQCN on | off
+  load_distribution: ""           # flow-hashing | packet-spraying
+
+S8_lossless_transport_configuration:   # one entry per lossless traffic class
+  - traffic_class: ""
+    pfc_enabled_priorities: []
+    ecn_marking_configuration: ""
+    dscp_to_traffic_class_mapping: {}
+    mtu: ""
+    applies_to: ["switches", "nics"]
+
+S9_physical_diversity:
+  cabling_availability_class: ""
+
+# ---------------------------------------------------------------- Resilience promise
+S10_failures_ridden_through:
+  per_tier:                       # K_k(tier): concurrent link or switch failures absorbed
+    - tier: ""
+      concurrent_failures: ""
+      residual_capacity: ""       # capacity kept after them (T12)
+  max_single_component_share: ""  # K_fd: largest share of job-bearing capacity one component may remove
+
+S11_recovery_objective:           # one entry per failure class (T33)
+  - failure_class: ""
+    mechanism: ""                 # routing-convergence | nic-multipath-or-spraying | job-restart
+    time_to_restore_capacity: ""
+    routing_convergence_time: ""  # where routing is the mechanism (measured as M45)
+    tolerated_job_impact: ""      # continue | degrade | restart
+
+# ---------------------------------------------------------------- Availability
+S12_availability_target:
+  healthy_share_of_windows: ""    # "healthy X% of the time" (SPEC.md §9.2)
+  period: ""
+  declared_maintenance_counts_against_target: ""   # yes | no (SPEC.md §9.3)
+
+# ---------------------------------------------------------------- Performance envelope
+S13_bandwidth_per_accelerator: ""
+S14_collective_bandwidth_reference: []  # per (collective, message size, rank count), method M-D7 (T26)
+S15_tail_delay_budget: []               # per path class, loaded and unloaded, method M-DLY (T10)
+S16_loss_budget: {}                     # per cause and traffic class; NIC retransmission rates (T4)
+S17_pause_budget: {}                    # PFC pause-time fraction per priority and port (T3)
+S18_physical_layer_budgets:             # per PHY type; never laxer than the IEEE budget (T37)
+  - phy_type: ""
+    stricter_budget: ""                 # optional
+    early_warning_margin: ""            # optional (T5)
+
+# ---------------------------------------------------------------- Required tests and telemetry
+S19_required_tests:
+  synthetic_collectives_required: ""    # yes | no (D7)
+  collective_cadence: ""                # K_cad (within the Rulebook frequency bound)
+  test_duration: ""                     # K_d7dur (within the Rulebook bound)
+  test_nodes: ""                        # reserved node set (K_d7nodes) or scheduled gaps
+  conformance_test_cadence: ""          # K_conf
+
+S20_telemetry_profile_ref: ""           # must cover the Rulebook minimum for the class (T35)
+
+# ---------------------------------------------------------------- Class
+S21_declared_class: ""                  # R1 | R2 | R3 (class presets) or CUSTOM
