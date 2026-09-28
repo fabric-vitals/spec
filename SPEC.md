@@ -371,6 +371,7 @@ The record **MUST** satisfy the rule that "a non-maximal score must always be ex
 - **A score is never shown without its class.** The unit of presentation is the phrase "Vitals Score N, class Rx (spec sheet version)", with CUSTOM in place of Rx for a custom sheet. Showing a bare number is non-conformant presentation.
 - Scores **MUST** be displayed as whole numbers.
 - Language models **MAY** be used to write explanations from the record. They **MUST NOT** compute or change any value in it.
+- A display of a Vitals Score series **MUST** show, on the same axis, the upper bound as a band above the confirmed score; each critical condition as an interval from raised to cleared; UNSCORABLE as a gap, never as zero; and every change of spec sheet or class. The series **MUST NOT** be smoothed or averaged. Every marked change on such a display **MUST** be derived from the score record (a change of binding reason, a critical condition raised or cleared, coverage crossing the floor, a spec sheet re-declared); an operator **MAY** attach a note to a marker, and a note **MUST NOT** replace or create one. An implementation **MUST** retain every reading with its binding reason and coverage for at least the longest reporting period it offers.
 
 ## 12. Comparability and versioning
 

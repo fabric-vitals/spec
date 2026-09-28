@@ -41,6 +41,8 @@ This repository is for the engineers who build and run these fabrics, the buyers
 | [`CITATION.cff`](CITATION.cff) | How to cite this specification |
 | [`LICENSE`](LICENSE) | CC BY 4.0 |
 
+Print versions: [paper (PDF)](paper/Fabric_Vitals_Paper_v0.2.pdf) · [summary (PDF)](paper/Fabric_Vitals_Summary_v0.2.pdf)
+
 **Start on day one.** The Day-One Set (SPEC.md §13) is the smallest set of vitals, counters and probes that yields a valid Vitals Score from telemetry most platforms already export.
 
 **Out of scope in v0.x, and on the roadmap** as candidate future profiles, in order of likely demand: front-end and inference-serving networks; storage and checkpoint traffic; scale-up interconnects (NVLink-class, including Ethernet-based scale-up); multi-tenant isolation. Security is excluded.
