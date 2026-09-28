@@ -6,15 +6,15 @@ labels: method
 ---
 
 **Which part of the method?**
-<!-- e.g. SPEC.md §6 aggregation; RULEBOOK.md T16; SPEC_SHEET.md §5 class presets; a seed issue number -->
+<!-- Name the part you are challenging, for example: the aggregation rule in SPEC.md §6; parameter T16 in RULEBOOK.md; the class presets in SPEC_SHEET.md §5; or the number of a seed issue (one of the open questions listed in SEED_ISSUES.md). -->
 
 **What is the problem?**
-<!-- State the case in which the method gives a wrong, misleading or unusable result. -->
+<!-- Describe the case in which the method gives a wrong, misleading or unusable result. -->
 
 **What do you propose instead?**
 
 **Evidence**
-<!-- A standard, paper or operational data. For each source, state its scope: lab or production, scale (number of accelerators), single operator or several. -->
+<!-- A standard, a paper or operational data. For each source, state its scope: whether it comes from a lab or from production, the scale (number of accelerators, the chips such as GPUs, graphics processing units, that run the AI work), and whether it covers a single operator or several. -->
 
 **Does this change a frozen value?**
-<!-- Values are never tuned after the fact (GOVERNANCE.md). A change to a value needs the evidence the Rulebook names for it. -->
+<!-- A frozen value is one fixed at publication. Values are never tuned after the fact; the rule is in GOVERNANCE.md. A change to a value needs the evidence that the Rulebook names for that value. -->
