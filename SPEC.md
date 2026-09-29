@@ -23,11 +23,11 @@ Terms used throughout:
 | Term | Definition |
 |---|---|
 | **Fabric Vitals (FV)** | The method specified in this document. "FV" is its short form. |
-| **Vitals Score** | The headline number for one fabric: a whole number from 0 to 100, or the word UNSCORABLE when there is not enough evidence to give a number. "FV score" is an acceptable short form. |
+| **Vitals Score** | The headline number for one fabric: a whole number from 0 to 100, or the word UNSCORABLE when there is not enough evidence to give a number. It measures how well the fabric is currently keeping the promises declared on its Fabric Spec Sheet under the common Rulebook. It is not an absolute network-quality rating, probability of failure, reliability percentage or percentile ranking. "FV score" is an acceptable short form. |
 | **Vital** | One of the seven aspects of fabric health that the method measures, numbered D1–D7, such as reachability or resilience. Each vital has a value from 0 to 100, which is the fraction of the declared promise that is being delivered. See §4. |
 | **Rulebook** | The single, versioned register of how every fabric is measured and judged. It is pre-registered, meaning it is published before any fabric is scored against it. A version is named like RB-0.2. |
 | **Fabric Spec Sheet** | The versioned document in which an owner declares what one fabric promises. It covers the fabric's purpose, how it is built, which failures it promises to ride through, how available it aims to be, what performance it promises, which tests it requires, and its class. See §2. |
-| **Class preset** | A ready-made, published spec sheet for a common fabric design. There are three, named R1, R2 and R3. Each has structural predicates (checks on how the fabric is built that must all hold for it to belong to that class) and promise fields (the values the class promises). Classes are design patterns ordered by how much redundancy they have; they are not quality tiers. See §2.2. |
+| **Class preset** | A proposed ready-made spec sheet and candidate reference profile for a fabric design. There are three in v0.2, named R1, R2 and R3. Each has structural predicates (checks on how the fabric is built that must all hold for it to belong to that class) and promise fields (the values the class promises). They are offered for critique and are not claimed as an established universal taxonomy. Classes are design patterns ordered by how much redundancy they have; they are not quality tiers. See §2.2. |
 | **Custom spec sheet** | A spec sheet that is not a preset used unchanged. Any edit to a preset makes it a custom sheet. |
 | **Fabric scope** | The set of switches, links and NIC ports that one spec sheet covers. The owner declares it together with its inventory in field S1. In v0.2 the scope is a back-end scale-out fabric, the network that carries traffic between accelerators. See §2.5. |
 | **Scoring scope** | The unit within which jobs run, such as a pod or a scalable unit (a block of servers and switches that is built and grown as one piece). It is declared on the spec sheet in field S23. Each scoring scope receives its own Vitals Score. See §2.6. |
@@ -61,9 +61,9 @@ Every vital checks one or more of these fields. The mapping is normative and is 
 
 ### 2.2 Class presets
 
-1. **Status.** The class scheme is proposed and open for critique. It is derived from public sources on data-center facility tiers and availability classes [1, 2, 3, 4, 5, 6] and from published AI-fabric designs [7, 8, 9]. It is not derived from the requirement tables of any paywalled standard.
+1. **Status.** The class scheme is proposed and open for critique. R1/R2/R3 are candidate reference profiles, not an established universal taxonomy. The scheme is derived from public sources on data-center facility tiers and availability classes [1, 2, 3, 4, 5, 6] and from published AI-fabric designs [7, 8, 9]. It is not derived from the requirement tables of any paywalled standard.
 2. **Shape.** There are three presets, each a complete spec sheet with structural predicates (S3–S9, S19, S20) and promise fields (S10–S18). They are design patterns ordered by redundancy, not quality tiers; a fabric that keeps the promises of its class is healthy, whichever class that is:
-   - **R1 Rail-optimized, single-homed:** each NIC attaches to a single rail leaf switch (the leaf that serves the same NIC position on every server), so there is no second path if that switch fails. This is the most common training design in published reference designs today; recovery is by checkpoint restart [8, 10, 11];
+   - **R1 Rail-optimized, single-homed:** each NIC attaches to a single rail leaf switch (the leaf that serves the same NIC position on every server), so there is no second path if that switch fails. This pattern appears in multiple published training reference designs and operator reports; recovery is by checkpoint restart [8, 10, 11];
    - **R2 Dual-homed:** each NIC attaches to two leaf switches, so the fabric rides through the failure of one leaf, or of a bounded number of uplinks per rail, without losing capacity [8];
    - **R3 Multi-plane, sprayed, tested:** the fabric is built as several independent planes, traffic is sprayed packet by packet across all of them, and synthetic collective tests run continuously [9].
 
@@ -86,10 +86,11 @@ Every vital checks one or more of these fields. The mapping is normative and is 
 2. The choice of class **SHOULD** come from an assessment of what downtime would cost and how much disruption each kind of failure may be allowed to cause, following the public practice of BICSI and of ISO 22301 [4, 5].
 3. The spec sheet **MUST** be signed, dated and versioned, in field S22, and **MUST** name the Rulebook version it is declared against.
 4. Any change to any field **MUST** create a new spec-sheet version. Scores under different spec-sheet versions form separate series. See §12.
+5. A new spec-sheet version **MUST NOT** erase or relabel score records from an earlier version. Changes to the declared inventory or fabric scope (S1), declared class (S21), or scoring scopes (S23) are ordinary spec-sheet changes: they create a visible series boundary, while the previous declaration and the scores produced under it remain part of the fabric's history.
 
 ### 2.5 Scope and deliberate exclusions
 
-1. v0.2 covers back-end scale-out fabrics carrying accelerator traffic.
+1. v0.2 covers back-end scale-out fabrics carrying accelerator traffic. The same back-end fabric may be evaluated under the TRAINING, INFERENCE or GENERAL workload profile in §10; those profile names describe the workload carried by the in-scope back-end fabric, not additional network domains.
 2. **Security** is deliberately excluded. The ITU-T recommendation M.3042 includes it; Fabric Vitals keeps to fabric health.
 3. **Roadmap of excluded areas.** The following are out of scope in every v0.x release and are candidates for future profiles, in order of likely demand:
    1. front-end and inference-serving networks;
@@ -121,7 +122,7 @@ Every vital checks one or more of these fields. The mapping is normative and is 
 ### 4.1 Common currency and definitions
 
 1. Every vital is on one scale: the fraction of the declared promise being delivered, from 0 (none of it) to 100 (all of it). The promise is what the spec sheet declares or, where the Rulebook sets the reference, the Rulebook reference for the declared class.
-2. This common currency is what makes the weakest-vital rule meaningful: equal values in two vitals mean the same share of each promise is being delivered. See §6.
+2. The v0.2 proposal uses this common currency to make the weakest-vital rule meaningful: equal values in two vitals are intended to represent the same share of each promise being delivered. Whether equal values across heterogeneous vitals also have sufficiently comparable operational meaning is an explicit, unvalidated hypothesis. See §6 and experiment E4.
 3. It is the design intent behind the value functions (the formulas that turn a raw measurement into a value on this scale, parameter T25) and their anchors (the fixed points those formulas pass through, parameter T31). The shapes of the value functions between the anchors remain to be calibrated, in experiment E4. See §5, item 5.
 
 | ID | Vital | Question | Definition | Metrics | Spec-sheet fields checked |
@@ -192,13 +193,13 @@ D7 normally corroborates the other vitals and enters the score only when the cla
    - entities **MUST** be weighted by their share of the capacity in the declared inventory;
    - the single worst entity **MUST** be reported alongside the vital value;
    - the exact rule for combining entities within a vital is part of the value-function definition, parameter T25.
-2. **Across vitals:** the Vitals Score **MUST** be the minimum of the confirmed (lower-bound) values of the vitals the spec sheet requires, capped by any active critical condition. No weights are used. See §7.
+2. **Across vitals:** in v0.2, the proposed Vitals Score **MUST** be the minimum of the confirmed (lower-bound) values of the vitals the spec sheet requires, capped by any active critical condition. No weights are used. This is the aggregation hypothesis being proposed for validation, not a claim that minimum aggregation has already been established as universal measurement science. See §7.
 3. **Companions.** With every Vitals Score an implementation **MUST** also report:
    - the breadth indicator: the number of required vitals not delivering their full promise (below 100), out of the number required;
    - the next-binding vital, the one that would set the score if the current weakest were fixed, and its value;
    - the full list of vital values.
 4. **Why the minimum.** The comparison of aggregation formulas on the masking example (four vitals at 100, one collapsed to 10) is in [`SCENARIOS.md`](SCENARIOS.md) §1. Only the rules that let the collapsed vital decide the score pass it, and the minimum is the only one of them that needs no weights and no cap constants.
-5. **Commensurability.** Taking the minimum assumes that the vitals are commensurable, that is, that a given value means the same degree of trouble in every vital. Implementations and Rulebooks **SHOULD** treat this assumption as unvalidated until experiment E4 reports. The experiment is described in [`VALIDATION.md`](VALIDATION.md).
+5. **Commensurability.** Taking the minimum assumes that the vitals are commensurable enough for the minimum to be meaningful. The open question is: **can heterogeneous vitals be normalized well enough that equal scores have sufficiently comparable operational meaning?** Implementations and Rulebooks **SHOULD** treat this assumption as unvalidated until experiment E4 reports. If E4 does not support it, the aggregation design remains open for revision; v0.2 does not pre-select the replacement. The experiment is described in [`VALIDATION.md`](VALIDATION.md).
 
 ## 7. Critical conditions
 
@@ -313,7 +314,7 @@ Confidence **MUST NOT** change the Vitals Score. The level at which a flag is ra
 
 ## 10. Workload profiles
 
-A workload profile describes what kind of work the fabric is used for and adjusts a few details of how it is judged. The profiles are TRAINING, INFERENCE and GENERAL.
+A workload profile describes what kind of work the **in-scope back-end scale-out fabric** carries and adjusts a few details of how that fabric is judged. The profiles are TRAINING, INFERENCE and GENERAL. INFERENCE here means inference-related accelerator traffic carried on that back-end fabric; it does not bring separate front-end or inference-serving network domains into v0.2 scope.
 - **What a profile selects:** which tail statistic the delay vital D4 uses, what "headroom" means for the capacity vital D6, which value functions the congestion vital D3 uses, and which test suites are run for D7 and at commissioning.
 - **What it does not change:** the set of vitals, the way they are aggregated, the set of critical conditions, or the coverage rules.
 - **Mixed fabrics:** a fabric whose declared purpose, field S2, is a mix of workloads **MUST** declare the one profile it is scored under.
@@ -369,6 +370,7 @@ The record **MUST** satisfy the rule that "a non-maximal score must always be ex
 ### 11.3 Presentation rules
 
 - **A score is never shown without its class.** The unit of presentation is the phrase "Vitals Score N, class Rx (spec sheet version)", with CUSTOM in place of Rx for a custom sheet. Showing a bare number is non-conformant presentation.
+- **Meaning.** A Vitals Score is a conformance reading against the declared Fabric Spec Sheet under the named Rulebook version. It **MUST NOT** be presented as an absolute network-quality rating, a probability of failure, a reliability percentage, a percentile rank, or evidence that (for example) R1 100 is better than R3 95. Scores of different classes or different custom spec sheets are not rankings of fabric quality.
 - Scores **MUST** be displayed as whole numbers.
 - Language models **MAY** be used to write explanations from the record. They **MUST NOT** compute or change any value in it.
 - A display of a Vitals Score series **MUST** show, on the same axis, the upper bound as a band above the confirmed score; each critical condition as an interval from raised to cleared; UNSCORABLE as a gap, never as zero; and every change of spec sheet or class. The series **MUST NOT** be smoothed or averaged. Every marked change on such a display **MUST** be derived from the score record (a change of binding reason, a critical condition raised or cleared, coverage crossing the floor, a spec sheet re-declared); an operator **MAY** attach a note to a marker, and a note **MUST NOT** replace or create one. An implementation **MUST** retain every reading with its binding reason and coverage for at least the longest reporting period it offers.
@@ -382,13 +384,14 @@ The record **MUST** satisfy the rule that "a non-maximal score must always be ex
    - the kind of scoring scope: a scope score is compared with other scope scores, never with a figure blended across a whole fabric.
 2. While the presets' promise values are not yet set, fabrics that adopt the same preset structure but declare their own promise values are comparable on structure only, and the record **MUST** say so.
 3. Scores of different classes, or of different custom spec sheets, **MUST NOT** be ranked against each other. A score confirms conformance to the fabric's own spec sheet.
-4. A score **MUST NOT** be compared across different Rulebook versions, spec-sheet versions or re-registrations of references without recomputation.
+4. A score **MUST NOT** be compared across different Rulebook versions, spec-sheet versions or re-registrations of references without recomputation. A new spec-sheet version starts a new score series; it does not rewrite or erase the previous series. A re-declaration after a design shortfall therefore does not erase the historical record that the fabric failed to meet the earlier promise.
 5. **Rulebook versions:** written RB-<major>.<minor>. A new major version changes the structure or the methods; a new minor version sets or revises values, including preset values. Once set, values are frozen at their freeze point. See [`GOVERNANCE.md`](GOVERNANCE.md).
-6. **Determinism.** The same telemetry, the same spec sheet and the same Rulebook version **MUST** produce a score record that is identical bit for bit, whoever computes it.
+6. **Cross-vendor status.** v0.2 is designed for vendor-neutral use, but it does not claim that complete cross-vendor telemetry equivalence or score comparability has already been demonstrated. `METRICS.md` distinguishes common model paths from measurements that need vendor/platform adapters or still have unresolved semantics. Cross-platform and cross-implementation reproducibility is part of validation experiment E8.
+7. **Determinism.** The same telemetry, the same spec sheet and the same Rulebook version **MUST** produce a score record that is identical bit for bit, whoever computes it.
 
 ## 13. Minimum implementation: the Day-One Set
 
-1. **Purpose.** An operator should be able to compute a valid Vitals Score on the first day, from telemetry most platforms already export. The Day-One Set is the smallest set of vitals, counters and probes that makes this possible. A score computed from it is a Vitals Score like any other: the same Rulebook, the same rules and the same meaning.
+1. **Purpose.** The Day-One Set is the proposed smallest starting set of vitals, counters and probes from which a valid Vitals Score can be computed. It prefers common models where they exist and permits the adapters identified in `METRICS.md` where they do not. Whether the proposed minimum is practical across vendors and platforms is part of the validation programme. A score computed from it is a Vitals Score like any other: the same Rulebook, the same rules and the same meaning.
 2. **Contents.** The set below is PROPOSED. It becomes the common core of the minimum telemetry profile, parameter T35, for every class:
 
 | Vital or condition | Counters and probes | Vendor-neutral data model, as listed in `METRICS.md` |

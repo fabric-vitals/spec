@@ -8,11 +8,11 @@
 
 ## Summary
 
-An AI data center is built around GPUs. Many of them must work together on one job, so they are connected by a dedicated high-speed network called an AI fabric. That network is watched through dozens of separate signals, but there is no shared answer to the question that the people who run it, own it and buy time on it keep asking: *is this AI fabric healthy?* This paper proposes **Fabric Vitals**, a method for answering that question. It is vendor-neutral, meaning it does not depend on any one equipment maker, and it produces one number, the **Vitals Score**, readable at a glance like a credit score.
+An AI data center is built around GPUs. Many of them must work together on one job, so they are connected by a dedicated high-speed network called an AI fabric. Operators already use health dashboards, intent/assurance systems and many separate signals. What is not widely adopted is a common vendor-neutral AI-fabric operational conformance method built around a shared measurement contract and a pre-declared fabric promise. This paper proposes **Fabric Vitals** as such a method. It is designed to be vendor-neutral, although complete cross-vendor telemetry equivalence has not yet been demonstrated, and it produces one number, the **Vitals Score**, intended to be read at a glance with the reasons underneath.
 
-The method works like the rating of a car's range. Every car is measured by the same official test procedure, but each car has its own rated range. In Fabric Vitals, a **Rulebook** that is identical for every fabric says how fabrics are measured and judged, and a **Fabric Spec Sheet**, a short declaration the owner fills in before any measurement, says what this particular fabric promises. The Vitals Score confirms whether the fabric keeps its promises. Four design choices make that confirmation credible:
+The method works like the rating of a car's range. Every car is measured by the same official test procedure, but each car has its own rated range. In Fabric Vitals, a **Rulebook** that is identical for every fabric says how fabrics are measured and judged, and a **Fabric Spec Sheet**, a short declaration the owner fills in before any measurement, says what this particular fabric promises. The Vitals Score measures how well the fabric is currently keeping those declared promises under the common Rulebook. It is not an absolute network-quality rating, probability of failure, reliability percentage or percentile ranking; the credit-score analogy is only "one number at a glance, with reasons underneath". Four design choices make that confirmation credible:
 - **Seven vitals** are measured from evidence that comes from the network itself, not from the jobs running over it.
-- **The headline is the weakest vital.** The Vitals Score is the lowest of the seven, and a short list of named critical conditions can force it lower still. One collapsed area therefore cannot be averaged away by healthy ones.
+- **The headline is the weakest vital in the v0.2 proposal.** The Vitals Score is the lowest of the seven, and a short list of named critical conditions can force it lower still. One collapsed area therefore cannot be averaged away by healthy ones. Whether heterogeneous vitals can be normalized well enough that equal scores have sufficiently comparable operational meaning is an explicit validation question, not a settled result.
 - **Unmeasured parts of the fabric count as unknown, not healthy.** Switching some of it off, or leaving part of the fabric unmonitored, can only lower the score, never raise it.
 - **Every rule and every promise is fixed and published before measurement,** so nothing can be tuned afterwards to make a result look better.
 
@@ -22,7 +22,7 @@ This paper defines the method. It does not yet set the Rulebook's numerical valu
 
 ## 1. The problem
 
-The people who operate AI fabrics watch many separate signals: link state, drops, ECN marks (the flag a switch sets to warn senders that a queue is filling), PFC pauses (the signal a switch sends to stop its neighbour before a queue overflows), buffer occupancy, retransmissions, latency tails, forward-error-correction statistics, optics readings, routing state, and synthetic collective tests (test traffic that imitates the way GPUs exchange data during a job). Each signal is useful. None answers "is this fabric healthy?", and today that question is answered in four incompatible ways:
+The people who operate AI fabrics already combine many signals: link state, drops, ECN marks (the flag a switch sets to warn senders that a queue is filling), PFC pauses (the signal a switch sends to stop its neighbour before a queue overflows), buffer occupancy, retransmissions, latency tails, forward-error-correction statistics, optics readings, routing state, and synthetic collective tests (test traffic that imitates the way GPUs exchange data during a job). Existing health and assurance systems are useful, but there is no widely adopted common vendor-neutral AI-fabric operational conformance method built around a shared measurement contract and pre-declared fabric promise. Current approaches include:
 - **pass/fail gates**, such as node and switch health checks and acceptance tests [1, 2, 3];
 - **each operator's own thresholds**, for example Meta's PFC watchdog, which acts when a pause lasts longer than 200 ms, and its buffer alarms, which fire when a buffer is more than 80% full [4];
 - **deviation from a baseline or from peers** [5, 6, 7];
@@ -81,7 +81,7 @@ Everything else is shared with generic network health. That is where existing st
 
 **Principle 5: no false precision.** Scores are whole numbers only. Colour bands are a display rule, published only once calibrated. Every parameter without evidence is marked "value not set".
 
-**Principle 6: vendor-neutral.** The method describes behaviour, not products. Where vendor-neutral telemetry, the measurements that network equipment reports about itself, does not exist yet, the dependency is stated.
+**Principle 6: designed to be vendor-neutral.** The method describes behaviour, not products. Where common telemetry models do not exist, the dependency and required vendor/platform adapter are stated. Complete cross-vendor measurement equivalence is a validation target, not an assumed property.
 
 **Principle 7: deterministic.** The same telemetry, spec sheet and Rulebook always produce the same score. Language models may explain a score but never compute it.
 
@@ -127,7 +127,7 @@ The spec sheet can promise less, but it cannot hide what it promises. The declar
 
 | Class | Name | What it is |
 |---|---|---|
-| R1 | Rail-optimized, single-homed | The most common training design in published reference designs today. Each accelerator NIC attaches to one leaf switch on its rail; recovery from a leaf failure is by checkpoint restart. |
+| R1 | Rail-optimized, single-homed | A documented training design pattern appearing in multiple current reference designs and operator reports. Each accelerator NIC attaches to one leaf switch on its rail; recovery from a leaf failure is by checkpoint restart. |
 | R2 | Dual-homed | Each NIC attaches to two switches, so the fabric rides through a leaf failure, or a limited number of uplink failures per rail, without losing capacity. |
 | R3 | Multi-plane, sprayed, tested | Several independent planes, packet spraying across them, and continuous synthetic collective tests. |
 
@@ -197,7 +197,7 @@ Job signals enter only after attribution to a network element [7, 40].
 
 **The D7 exception.** D7 only corroborates the other vitals unless the class requires it; of the presets, only R3 does. Its cost is bounded by method: short runs, a small reserved set of nodes or scheduled gaps between jobs, and a frequency bound, with the values not yet set. This avoids a perverse incentive: if D7 simply joined the minimum whenever it was run, a fabric that tests itself could only ever score the same or lower than one that does not.
 
-**Deliberate exclusions.** Security is excluded. Front-end and inference-serving networks, storage and checkpoint traffic, scale-up interconnects (the links that join GPUs inside one server or rack) and multi-tenant isolation are out of scope in v0.x and are candidate future profiles. See Section 8.
+**Scope and deliberate exclusions.** v0.x scores the back-end scale-out fabric, which may use the TRAINING, INFERENCE or GENERAL workload profile. Security is excluded. Separate front-end networks, inference-serving network domains, storage/checkpoint networks, scale-up interconnects (the links that join GPUs inside one server or rack) and multi-tenant isolation are out of scope in v0.x and are candidate future profiles. See Section 8.
 
 **Vendor-neutral telemetry is uneven.**
 - Physical-layer counters are well covered by the IEEE and OpenConfig data models [43, 44].
@@ -353,7 +353,7 @@ A common way to describe AI-fabric health is a checklist: NIC speed, bisection b
 
 ## 7. Relationship to existing work
 
-**ITU-T M.3042** (2025) is the principal prior work. It is the ITU-T framework for communication network health, and it defines a network health index as "a single summary indicator expressed in quantitative terms indicating the degree of communication network health" [49].
+**ITU-T M.3042** (2025) is one principal prior work. It is the ITU-T framework for communication network health, and it defines a network health index as "a single summary indicator expressed in quantitative terms indicating the degree of communication network health" [49].
 - **Structure.** Four levels: an overall index; four dimensions (availability, reliability, security and maintainability); 21 third-level indexes; and scenario-specific indexes.
 - **Aggregation.** The top two levels are weighted sums, with weights "outside the scope of this Recommendation". Inside 8 of the 21 third-level indexes, M.3042 already applies the weakest-element rule: it takes the minimum across network-element types.
 - **Where Fabric Vitals differs.** It applies that minimum *across* its dimensions, adds critical conditions, scores against a declared spec sheet and a pre-registered Rulebook rather than operator-chosen weights, and uses AI-fabric inputs. It also excludes security, which M.3042 includes, to stay focused on fabric health.
@@ -366,7 +366,7 @@ The two are complementary. Fabric Vitals could be described to ITU-T readers lev
 - **What it is not.** It scores individual links for congestion; it is not a fabric-wide health measure.
 - **How Fabric Vitals can use it.** It is a possible input to the congestion and capacity vitals. Its monotonicity requirement (a worse input must never give a better score) matches ours, and its caution that two conforming implementations may disagree describes exactly the problem a pre-registered Rulebook addresses. Its "healthy" range is not adopted as a reference.
 
-**IETF service assurance (SAIN) and Quality of Outcome.** SAIN, the IETF's service assurance for intent-based networking architecture, standardizes a 0–100 health score with −1 for "no value could be computed", and requires symptoms for any non-maximal score [52, 59]. Fabric Vitals conforms to both conventions, and its vitals could be carried as SAIN subservices. The IETF Quality of Outcome draft scores by the minimum with application profiles [48]. Fabric Vitals follows it.
+**IETF service assurance (SAIN) and Quality of Outcome.** SAIN, the IETF's service assurance for intent-based networking architecture, standardizes a 0–100 health score with −1 for "no value could be computed", and requires symptoms for any non-maximal score [52, 59]. Fabric Vitals adopts compatible conventions for UNSCORABLE and explanation; those ideas are prior art, and its vitals could be carried as SAIN subservices. The IETF Quality of Outcome draft scores by the minimum with application profiles [48]. Its requirement-relative normalization and minimum aggregation are also direct prior art for the v0.2 proposal, whose cross-vital commensurability remains to be validated.
 
 **Facility tier practice.**
 - **Uptime Institute's Tier Standard: Topology** explicitly excludes IT and the network. It rates a site by its lowest subsystem, with no partial tiers, confirmed by outcome-based tests [30].
@@ -401,9 +401,9 @@ Fabric Vitals borrows the ideas of declaration, weakest-subsystem rating and out
 - Custom spec sheets can promise little; their scores are then honest but not comparable, which is why presets matter.
 - Method-only references can lock in the behaviour of a fabric that was already bad at commissioning, wherever no declared value or acceptance criterion exists.
 
-**Roadmap of excluded areas.** Out of scope in v0.x, and candidate future profiles, in order of likely demand: front-end and inference-serving networks; storage and checkpoint traffic; scale-up interconnects (NVLink-class, including Ethernet-based versions); and multi-tenant isolation. Security is excluded.
+**Scope and roadmap.** v0.x scores the back-end scale-out fabric. That back-end fabric may use the TRAINING, INFERENCE or GENERAL workload profile. Separate front-end networks, inference-serving network domains, storage/checkpoint networks, scale-up interconnects (NVLink-class, including Ethernet-based versions) and multi-tenant isolation are out of scope and are candidate future profiles. Security is excluded.
 
-**The field is moving.** The closest prior art appeared in July 2026. Related work must be re-checked before any submission.
+**The field is moving.** Relevant prior art predates Fabric Vitals, including IETF SAIN, ITU-T M.3042, IETF Quality of Outcome, vendor assurance/health systems and facility-rating practice; additional AI-fabric scoring and benchmarking work continues to appear. Fabric Vitals claims potential novelty only in the proposed combination, not in those individual ideas. Related work must be re-checked before any submission.
 
 **How validation will proceed.**
 1. **Expert critique** of the class presets and the spec-sheet template, in public.
@@ -425,7 +425,7 @@ Rulebook values will be fixed before measurement, through an open, versioned cha
 
 ## 10. Disclosure
 
-The author organization develops network software. The proposal is written to be implementable by any vendor or operator. The method, its Rulebook and its class presets are vendor-neutral and are offered for open discussion.
+The author organization develops network software. Fabric Vitals is currently author-stewarded by datacenternetwork.ai and open to contribution; it does not yet have neutral institutional governance. The proposal is designed to be implementable by vendors and operators across platforms, but complete cross-vendor telemetry equivalence and score comparability remain part of the validation programme. The method, its Rulebook and its proposed class presets are offered for open discussion.
 
 ---
 

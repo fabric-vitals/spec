@@ -31,6 +31,8 @@ Any parameter whose value depends on those phenomena waits for the GPU and hardw
 
 ## 2. Experiments
 
+**Cross-vendor status.** Fabric Vitals is designed for vendor-neutral use, but equivalent telemetry semantics are not assumed. Some required measurements have common models today, some require vendor/platform adapters, and some counter meanings still need validation. E8 therefore tests cross-platform and cross-implementation reproducibility; a mismatch is evidence against comparability, not something to normalize away silently.
+
 **General setup (all lab experiments):**
 - **Topology.** At least two leaf domains, so that multi-tenant and cross-switch effects are visible. Leonardo shows that interference appears only when GPUs are not under the same switch [1]. See V-S1.
 - **Telemetry.** Full switch and NIC telemetry at the resolution the draft telemetry profile requires, plus an active probe mesh (method M-PRB, T28). See SPEC.md §8.1.
