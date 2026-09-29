@@ -18,9 +18,9 @@ These are the questions we most want the community to answer. Each will be opene
 
 ## 3. The commensurability assumption
 
-**Summary.** The Vitals Score (the single health score) is the minimum across vitals: the lowest vital sets the score. That assumes the vitals are commensurable, so that a value of 60 in one vital means as bad as 60 in another. The Rulebook (the one set of rules that applies to every fabric) makes this true by definition relative to each reference; whether it also holds for operational impact is untested (experiment E4, [`VALIDATION.md`](VALIDATION.md)).
+**Summary.** v0.2 proposes the minimum across vitals: the lowest required vital sets the headline. That depends on the vitals being commensurable enough for equal scores to have sufficiently comparable operational meaning. E4 tests impact equivalence and develops a calibrated weakest-vital candidate; E5 then compares the current v0.2 minimum, the calibrated minimum, an arithmetic-average comparator, and the existing cap-hybrid, geometric and M.3042-style alternatives. No model is pre-selected as the winner ([`VALIDATION.md`](VALIDATION.md)).
 
-**Question.** Do you have evidence, from incidents or experiments, that equal distances from reference in different vitals have similar or very different impact on AI jobs? *Template: method critique. Label: `method`.*
+**Question.** What evidence and decision criteria should determine which aggregation model best preserves severe faults, tracks network-attributable operational impact, remains explainable and behaves robustly under uncertainty? *Template: method critique. Label: `method`.*
 
 ## 4. Cross-vendor measurement equivalence
 
