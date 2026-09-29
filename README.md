@@ -43,10 +43,11 @@ This repository is for the engineers who build and run these fabrics, the buyers
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to open issues and propose changes |
 | [`TRADEMARK.md`](TRADEMARK.md) | How the names "Fabric Vitals" and "Vitals Score" may be used (draft policy) |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version history |
+| [`paper/Fabric_Vitals_FAQ_v0.2.md`](paper/Fabric_Vitals_FAQ_v0.2.md) | Plain-language FAQ synchronized to the v0.2 public-discussion baseline |
 | [`CITATION.cff`](CITATION.cff) | How to cite this specification |
 | [`LICENSE`](LICENSE) | CC BY 4.0 |
 
-Print versions: [paper (PDF)](paper/Fabric_Vitals_Paper_v0.2.pdf) · [summary (PDF)](paper/Fabric_Vitals_Summary_v0.2.pdf)
+Print versions: [paper (PDF)](paper/Fabric_Vitals_Paper_v0.2.pdf) · [summary (PDF)](paper/Fabric_Vitals_Summary_v0.2.pdf) · [FAQ (PDF)](paper/Fabric_Vitals_FAQ_v0.2.pdf)
 
 **Start on day one.** The Day-One Set (SPEC.md §13) is the smallest set of vitals, counters and probes that yields a valid Vitals Score from telemetry most platforms already export.
 
