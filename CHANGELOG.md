@@ -8,7 +8,7 @@
 - TRAINING / INFERENCE / GENERAL are clarified as workload profiles for the in-scope back-end scale-out fabric; separate inference-serving network domains remain out of scope in v0.x.
 - R1/R2/R3 are described as proposed class presets and candidate reference profiles, not an established universal taxonomy.
 - Vendor-neutrality is stated as a design goal whose complete cross-vendor telemetry equivalence remains to be validated.
-- The weakest-vital minimum remains the v0.2 proposal, with cross-vital commensurability explicitly identified as an unvalidated hypothesis for E4.
+- The weakest-vital minimum remains the v0.2 computation. E4/E5 now make the hypothesis explicitly falsifiable by comparing the current minimum, a calibrated minimum, an arithmetic-average comparator and other serious alternatives with no pre-selected winner.
 - Spec-sheet, class, inventory and scoring-scope changes create visible score-series boundaries; prior score records and prior failures remain historical evidence.
 - Governance is described as author-stewarded and open to contribution today, with the existing commitment to transfer stewardship and marks to an open multi-party body if chosen.
 

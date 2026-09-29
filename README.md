@@ -1,25 +1,30 @@
 # Fabric Vitals
 
-**A proposed vendor-neutral health score for AI data-center back-end scale-out fabrics.**
+**A proposed health score for AI data-center back-end scale-out fabrics.**
 
-> **Status: Fabric Vitals v0.2 (draft) — a technical proposal for discussion. Not a standard. Rulebook values not yet set.**
+Fabric Vitals is a proposed health score for AI data-center fabrics. In v0.2, it scores the **back-end scale-out fabric**. It measures how well the fabric is keeping the promises on its Fabric Spec Sheet, under a common Rulebook. The Vitals Score gives one number at a glance, with the reasons underneath.
 
-Operators already use health dashboards, intent/assurance systems and many separate signals. What is not widely adopted is a common vendor-neutral AI-fabric operational conformance method built around a shared measurement contract and a pre-declared fabric promise. Fabric Vitals proposes such a method. Its Vitals Score is a number from 0 to 100 intended to be read at a glance, with the reasons underneath. It measures how well a fabric is currently keeping the promises on its Fabric Spec Sheet under the common Rulebook. It is not an absolute network-quality rating, a probability of failure, a reliability percentage or a percentile ranking. When too little of the fabric has been measured to give an honest number, the result is UNSCORABLE instead.
+## Status and claims
+
+- **v0.2 is an open technical proposal** for discussion, critique and validation. It is not a standard, certification or procurement benchmark.
+- **Most Rulebook values remain unset.** The score model and proposed class presets are being offered for validation and industry critique.
+- **Vendor-neutrality is the design goal.** Complete cross-vendor telemetry and score equivalence have not yet been demonstrated.
+- **The score is a conformance reading, not an absolute rating.** It is not a probability of failure, a reliability percentage or a percentile ranking.
 
 This repository is for the engineers who build and run these fabrics, the buyers who pay for them, and the vendors whose equipment they run on. If you are new here, read this page, then start with the open questions in SEED_ISSUES.md.
 
 **How it works, in one picture.** Every car's range is measured by the same official test procedure, but each car has its own rated range. Fabric Vitals works the same way:
 - **The Rulebook** (RULEBOOK.md) is the test procedure. It says how every fabric is measured and judged, and it is identical for every fabric.
 - **The Fabric Spec Sheet** (SPEC_SHEET.md) is the rated range. The owner declares, before measurement, what this fabric promises: its purpose, its build, the failures it rides through, how fast it recovers, how often it should be healthy, and its performance envelope.
-- **Proposed class presets** are candidate reference profiles: published spec sheets offered as starting points for industry critique. There are three, ordered by redundancy, not by quality: **R1** rail-optimized, single-homed (one connection per endpoint); **R2** dual-homed (two connections); **R3** multi-plane, sprayed, tested (several parallel planes, traffic spread across them, proven by tests). They are not claimed as an established universal taxonomy.
+- **Class presets** are proposed ready-made Spec Sheets. **R1** reflects a rail-optimized, single-homed training pattern documented in multiple current reference designs and operator reports; **R2** is dual-homed; **R3** is multi-plane, sprayed and tested. They are ordered by redundancy, not quality, and are starting points for critique and validation.
 
 **What makes it different:**
 - **Measured against a declared promise.** Every vital is the fraction of its declared promise being delivered, from 0 to 100, judged by a Rulebook fixed and published before measurement. A score is always shown with its class: "Vitals Score N, class Rx (spec sheet version)".
 - **Scored where jobs run.** Each declared scoring scope (the pod or scalable unit a job runs on) gets its own score; large fabrics are reported as a set of scope scores with the lowest named, never as one blended number.
-- **The weakest vital sets the score in the v0.2 proposal.** Critical conditions cap it. Four vitals at 100 and one at 10 score **10**, not the 82 an average would give. This minimum rule is a hypothesis to validate: the open question is whether heterogeneous vitals can be normalized well enough that equal scores have sufficiently comparable operational meaning.
+- **The v0.2 headline uses the weakest vital.** Critical conditions cap it. Four vitals at 100 and one at 10 score **10**. Validation experiments E4 and E5 test whether this minimum, a calibrated minimum, an arithmetic average or other serious alternatives best preserve severe faults and track attributed operational impact.
 - **Unknown is not healthy.** The Vitals Score is the *confirmed* score: only what was measured counts. Unmeasured capacity counts as worst, and the upper bound (the score if the unmeasured parts were healthy) is shown beside it. If coverage, the share of the fabric the telemetry (the equipment's exported measurements) reaches, is too low, the result is UNSCORABLE, with a list of exactly which telemetry is missing and where.
 - **Every score explains itself.** The record gives the binding vital or condition (the one that set it), ordered contributors, and full lineage to raw counters. Language models may explain a score but never compute it.
-- **Designed to be vendor-neutral and open.** The method describes behaviour, not products. Some measurements already have common models, others require vendor/platform adapters, and some counter semantics still need validation. Complete cross-vendor score equivalence has not yet been demonstrated.
+- **Designed for vendor-neutral implementation.** The method describes behaviour, not products. `METRICS.md` identifies where common models exist, where vendor/platform adapters are needed and where counter semantics still need validation.
 
 **Files:**
 
