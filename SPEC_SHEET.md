@@ -85,15 +85,17 @@ Field IDs S1–S23 are used throughout the specification. "Register" names the R
 
 ## 5. Class presets
 
-**Status: PROPOSED — open for critique.** The class scheme is the author's proposal, derived from public sources on facility tiers and availability classes [3, 4, 5, 6, 7, 8, 9] and from published AI-fabric designs [1, 10, 11]. It is not derived from the requirement tables of any paywalled standard, which were not consulted.
+**Status: PROPOSED — open for critique.** R1/R2/R3 are proposed class presets and candidate reference profiles, not an established universal taxonomy. The scheme is the author's proposal, derived from public sources on facility tiers and availability classes [3, 4, 5, 6, 7, 8, 9] and from published AI-fabric designs [1, 10, 11]. It is not derived from the requirement tables of any paywalled standard, which were not consulted.
 
 **What a preset is.** A class preset is a published, complete spec sheet: its **structural predicates** (the build a fabric must have) and its **promise fields** (what a fabric of that class promises).
+
+**What a preset is not.** The three v0.2 presets are starting points for industry critique. They do not claim to enumerate every valid AI-fabric architecture, and their final taxonomy remains an open question.
 
 **Classes are design patterns, not quality tiers.** The three presets are ordered by the amount of redundancy they build in, not by how good they are. A fabric that keeps the promises of its class is healthy, whichever class it is. Scores are never ranked across classes. See SPEC.md §12.
 
 | Code | Name | Description | Evidence for the pattern |
 |---|---|---|---|
-| **R1** | Rail-optimized, single-homed | The most common training design in published reference designs today. Each accelerator NIC attaches to one leaf of its rail, and recovery from a leaf failure is by checkpoint restart. | Juniper's validated design: "rail Nth connects all GPUs in position Nth on all the servers, to leaf node Nth" [12]; NVIDIA's reference compute fabric "is rail-optimized" [13]; Alibaba calls single-ToR attachment "widely used in the majority of current cloud providers" [10]. |
+| **R1** | Rail-optimized, single-homed | A documented training design pattern that appears in multiple current reference designs and operator reports. Each accelerator NIC attaches to one leaf of its rail, and recovery from a leaf failure is by checkpoint restart. | Juniper's validated design: "rail Nth connects all GPUs in position Nth on all the servers, to leaf node Nth" [12]; NVIDIA's reference compute fabric "is rail-optimized" [13]; Alibaba calls single-ToR attachment "widely used in the majority of current cloud providers" [10]. |
 | **R2** | Dual-homed | Rides through a leaf failure, or a bounded number of uplink failures per rail, without losing capacity. | Alibaba's HPN network "connects two ports of each NIC to different ToRs in an active-active way. … If one ToR (or a port) is down, the other can still work", in production [10]. |
 | **R3** | Multi-plane, sprayed, tested | Independent planes, spraying across them, and continuous synthetic collective tests (D7 required). | Multi-plane spraying rides out tier-to-tier link failures [11]; a vendor reference design prescribes dual planes [14]. |
 
