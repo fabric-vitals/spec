@@ -1,15 +1,6 @@
 name: Build Fabric Vitals v0.2 PDFs
 
 on:
-  push:
-    branches:
-      - sync/v02-public-baseline
-    paths:
-      - 'paper/Fabric_Vitals_Paper_v0.2.md'
-      - 'paper/Fabric_Vitals_Summary_v0.2.md'
-      - 'paper/Fabric_Vitals_FAQ_v0.2.md'
-      - 'paper/build_fv_pdfs.py'
-      - '.github/workflows/fv-v02-pdf-sync.yml'
   workflow_dispatch:
 
 permissions:
