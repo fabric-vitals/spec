@@ -2,6 +2,16 @@
 
 ## v0.2 (draft) — 2026-09-28
 
+**Public-discussion readiness clarifications (2026-09-29).** No scoring formula, vital, critical condition or Rulebook value changed.
+- Prior-art positioning now explicitly credits SAIN, ITU-T M.3042, IETF QoO, AI-fabric benchmarking work, vendor assurance systems and facility-rating precedents; no unsupported "first" claim is made.
+- The Vitals Score is defined consistently as conformance to the declared Fabric Spec Sheet under the common Rulebook, not absolute network quality, failure probability, reliability percentage or percentile rank.
+- TRAINING / INFERENCE / GENERAL are clarified as workload profiles for the in-scope back-end scale-out fabric; separate inference-serving network domains remain out of scope in v0.x.
+- R1/R2/R3 are described as proposed class presets and candidate reference profiles, not an established universal taxonomy.
+- Vendor-neutrality is stated as a design goal whose complete cross-vendor telemetry equivalence remains to be validated.
+- The weakest-vital minimum remains the v0.2 proposal, with cross-vital commensurability explicitly identified as an unvalidated hypothesis for E4.
+- Spec-sheet, class, inventory and scoring-scope changes create visible score-series boundaries; prior score records and prior failures remain historical evidence.
+- Governance is described as author-stewarded and open to contribution today, with the existing commitment to transfer stewardship and marks to an open multi-party body if chosen.
+
 **Design change: the Rulebook and the spec sheet are separate.**
 - The parameter register is renamed the **Rulebook** ([`RULEBOOK.md`](RULEBOOK.md), RB-0.2), identical for every fabric. It replaces `REFERENCE_PROFILE.md`.
 - New **Fabric Spec Sheet** ([`SPEC_SHEET.md`](SPEC_SHEET.md)), on which an owner declares what a fabric promises: fields S1–S23 declared per fabric before measurement (purpose, build, resilience promise, availability target, performance envelope, required tests, class), a normative mapping from each vital (the seven measured dimensions of fabric health) to the fields it is judged against, and a fillable template ([`templates/fabric-spec-sheet.yaml`](templates/fabric-spec-sheet.yaml)).
