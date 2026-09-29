@@ -4,6 +4,8 @@
 
 ## Steward
 
+**Current governance status.** Fabric Vitals is author-stewarded by datacenternetwork.ai and open to public contribution. It does not yet have neutral institutional governance or a multi-party decision body.
+
 **datacenternetwork.ai** is the initial author of Fabric Vitals, and the publisher and steward of its specification, Rulebook and class presets. The Rulebook is the one set of measuring and judging rules that applies to every fabric; a class preset is a published, ready-made spec sheet (the declaration of what a fabric promises) that owners can adopt. The method's name is deliberately independent of the steward.
 
 **Commitment to a neutral body.** It is the steward's intent that stewardship move to an open, multi-party body (for example a standards organization, consortium or foundation) if the community prefers. If stewardship moves, datacenternetwork.ai commits to **transfer the marks "Fabric Vitals" and "Vitals Score"** ([`TRADEMARK.md`](TRADEMARK.md)) together with stewardship of the specification, the Rulebook and the class presets to that body. Any such move will be announced in [`CHANGELOG.md`](CHANGELOG.md).
